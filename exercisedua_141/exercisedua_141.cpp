@@ -1,24 +1,94 @@
-// exercisedua_141.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include <vector>
 using namespace std;
 
+class pengarang;
+class penerbit {
+public:
+    string nama;
+    vector<pengarang*> daftar_pengarang;
+    penerbit(string pNama) :nama(pNama) {
+        cout << "penerbit \"" << nama << "\" ada\n";
+    }
+    ~penerbit() {
+        cout << "penerbit \"" << nama << "\" tidak ada\n";
+    }
+    void tambahPengarang(pengarang*);
+    void cetakPengarang();
 
 
-int main()
-{
-    std::cout << "Hello World!\n";
+};
+
+class pengarang {
+public:
+    string nama;
+    vector<penerbit*> daftar_penerbit;
+
+    pengarang(string pNama) :nama(pNama) {
+        cout << "Pengarang \"" << nama << "\" ada\n";
+
+    }
+    ~pengarang() {
+        cout << "Pengarang \"" << nama << "\" tidak ada\n";
+
+    }
+    void tambahPenerbit(penerbit*);
+    void cetakPenerbit();
+};
+
+void penerbit::tambahPengarang(pengarang* pPengarang) {
+    daftar_pengarang.push_back(pPengarang);
+}
+void penerbit::cetakPengarang() {
+    cout << "Daftar Pengarang yang menerbitkan \"" << this->nama << "\":\n";
+    for (auto& a : daftar_pengarang) {
+        cout << a->nama << "\n";
+    }
+    cout << endl;
+}
+void pengarang::tambahPenerbit(penerbit* pPenerbit) {
+    daftar_penerbit.push_back(pPenerbit);
+    pPenerbit->tambahPengarang(this);
+
+}
+void pengarang::cetakPenerbit() {
+    cout << "Daftar Penerbit dari pengarang \"" << this->nama << "\":\n";
+    for (auto& a : daftar_penerbit) {
+        cout << a->nama << "\n";
+
+    }
+    cout << endl;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+int main() {
+    pengarang* varPengarang1 = new pengarang("Joko");
+    pengarang* varPengarang2 = new pengarang("Lia");
+    pengarang* varPengarang3 = new pengarang("Giga");
+    pengarang* varPengarang4 = new pengarang("Asroni");
+    penerbit* varPenerbit1 = new penerbit("Gama Press");
+    penerbit* varPenerbit2 = new penerbit("Intan Pariwara");
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+
+    varPengarang1->tambahPenerbit(varPenerbit1);
+    varPengarang2->tambahPenerbit(varPenerbit1);
+    varPengarang3->tambahPenerbit(varPenerbit1);
+    varPengarang3->tambahPenerbit(varPenerbit2);
+    varPengarang4->tambahPenerbit(varPenerbit2);
+
+
+    varPengarang1->cetakPenerbit();
+    varPengarang2->cetakPenerbit();
+    varPengarang3->cetakPenerbit();
+    varPengarang4->cetakPenerbit();
+    varPenerbit1->cetakPengarang();
+    varPenerbit2->cetakPengarang();
+
+    delete varPenerbit1;
+    delete varPenerbit2;
+    delete varPengarang1;
+    delete varPengarang2;
+    delete varPengarang3;
+    delete varPengarang4;
+
+    return 0;
+}
